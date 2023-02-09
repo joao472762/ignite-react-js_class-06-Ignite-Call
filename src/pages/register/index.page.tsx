@@ -1,4 +1,6 @@
 import { z } from "zod";
+import axios, { AxiosError } from "axios";
+
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { ArrowRight } from "phosphor-react";
@@ -7,6 +9,7 @@ import { Box, Button, Heading, MultiStep, Text, TextInput } from "@ignite-ui/rea
 
 import {  FormError, Header, RegisterContainer, RegisterForm } from "./styles";
 import { useEffect } from "react";
+import { api } from "@/libs/axios";
 
 const registerFormSchema = z.object({
     userName: z.string()
@@ -27,10 +30,25 @@ export default function Register(){
         resolver: zodResolver(registerFormSchema),
   
     })
-    
 
-    async function Register(data: registerFormData){
+    async function handleRegisterNewUser(data: registerFormData){
+        try {
+            
+           await api.post('/users',{
+                name: data.name,
+                userName: data.userName
+            })
 
+            await router.push('/register/conect-calendar')
+
+
+        } catch (error) {
+            if(error instanceof AxiosError && error.response?.data.message){
+                alert(error.response.data.message)
+                return
+            }
+            console.log(error)
+        }
     }
 
     useEffect(() => {
@@ -38,6 +56,8 @@ export default function Register(){
             setValue('userName',String(router.query?.username))
         }
     } , [router.query?.username, setValue])
+
+
     return (
         <RegisterContainer>
                 <Header>
@@ -48,7 +68,7 @@ export default function Register(){
                     <MultiStep size={4} currentStep={1}/>
                 </Header>
 
-                <RegisterForm as={'form'} onSubmit={handleSubmit(Register)}>
+                <RegisterForm as={'form'} onSubmit={handleSubmit(handleRegisterNewUser)}>
 
                     <label>
                         <Text>Nome de usuário</Text>
@@ -63,7 +83,7 @@ export default function Register(){
                  
 
                     <label>
-                        <Text>Nome de usuário</Text>
+                        <Text>Nome Completo</Text>
                         <TextInput 
                             placeholder="seuNome"
                             {...register('name')} 
