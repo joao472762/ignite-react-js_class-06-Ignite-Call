@@ -1,11 +1,12 @@
-import { PrismaAdapter } from "@/libs/auth/prisama.adpter"
-import type { NextApiRequest, NextApiResponse } from "next"
 import NextAuth, { NextAuthOptions } from "next-auth"
+import type { NextApiRequest, NextApiResponse, NextPageContext } from "next"
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google"
 
+import { PrismaAdapter } from "@/libs/auth/prisama.adpter"
+
 export function buildNextAuthOptions(
-  request: NextApiRequest,
-  response: NextApiResponse
+  request: NextApiRequest | NextPageContext['req'],
+  response: NextApiResponse | NextPageContext['res'],
 ): NextAuthOptions  {
   return {
     // Configure one or more authentication providers

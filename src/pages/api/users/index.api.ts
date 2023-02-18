@@ -1,8 +1,7 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { z } from 'zod'
+import { setCookie } from 'nookies'
 import { prisma } from '@/libs/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { setCookie } from 'nookies'
-import { z } from 'zod'
 
 
 

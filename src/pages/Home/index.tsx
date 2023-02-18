@@ -1,8 +1,9 @@
-import { Heading, Text } from "@ignite-ui/react";
 import Head from "next/head";
-import { Hero, HomeContainer, Preview} from "./styles";
-import previewImage from '../../assets/previewImage.png'
 import Image from "next/image";
+import { Heading, Text } from "@ignite-ui/react";
+import { Hero, HomeContainer, Preview} from "./styles";
+
+import previewImage from '../../assets/previewImage.png'
 import { ClaimUserNameForm } from "./components/ClaimUserNameForm";
 
 export default function Home(){

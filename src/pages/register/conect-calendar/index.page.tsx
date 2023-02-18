@@ -1,8 +1,10 @@
-import { Button, Heading, MultiStep, Text } from "@ignite-ui/react";
-import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ArrowRight, Check } from "phosphor-react";
-import { Header } from "../styles";
+import { signIn, useSession } from "next-auth/react";
+import { Button, Heading, MultiStep, Text } from "@ignite-ui/react";
+
+import { Header } from "../components";
+
 import { AuthError, ConenctCalendarContainer, ConnectArea, ConnectBox } from "./styles";
 
 export default  function ConenctCalendar()  {
@@ -17,7 +19,7 @@ export default  function ConenctCalendar()  {
         signIn('google')
     }
     
-    console.log(session)
+   
     return (
         <ConenctCalendarContainer>
             <Header>
