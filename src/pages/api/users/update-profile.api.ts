@@ -26,7 +26,7 @@ export default async function handler(
 
     const {bio} = requestBodySchema.parse(request.body)
 
-    if(bio.length === 0 ){
+    if(bio.length === 0){
         return response.status(304).end()
     }
     

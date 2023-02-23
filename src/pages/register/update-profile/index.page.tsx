@@ -1,19 +1,17 @@
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
 import { api } from '@/libs/axios'
-import { buildNextAuthOptions } from '@/pages/api/auth/[...nextauth].api'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Avatar, Button, Heading, MultiStep, Text, TextArea} from '@ignite-ui/react'
 import { GetServerSideProps } from 'next'
-import { Session } from 'next-auth'
-import { getServerSession } from 'next-auth/next'
 import { useSession } from 'next-auth/react'
 import { ArrowRight } from 'phosphor-react'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { getServerSession } from 'next-auth/next'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Avatar, Button, Heading, MultiStep, Text, TextArea} from '@ignite-ui/react'
+
 import { Header } from '../components'
-import { AboutMe, FormAnotation, ProfileBox, UpadeteProfileContainer } from './styles'
-
-
+import { buildNextAuthOptions } from '@/pages/api/auth/[...nextauth].api'
+import { FormAnotation, ProfileBox, UpadeteProfileContainer } from './styles'
+import { useRouter } from 'next/router'
 
 const updateProfileSchema = z.object({
     bio: z.string().min(1),
@@ -21,23 +19,20 @@ const updateProfileSchema = z.object({
 })
 
 type updateProfileData = z.infer<typeof updateProfileSchema>
-
-
-
 export default function UpdateProfile(){
-
+    const router = useRouter()
     const {data} = useSession()
     const { handleSubmit,register, formState: { isSubmitting } } = useForm<updateProfileData>({
         resolver: zodResolver(updateProfileSchema)
     })
 
-    async function handleUpdateBioProfile(data: updateProfileData){
+    async function handleUpdateBioProfile(formData: updateProfileData){
         await api.put('/users/update-profile',{
-            bio: data.bio
+            bio: formData.bio
         })
+        await router.push(`/schedule/${data?.user.userName}`)
     }
     
-
     return (
         <UpadeteProfileContainer>
             <Header>

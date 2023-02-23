@@ -38,7 +38,7 @@ export  function PrismaAdapter(
         emailVerified: null,
         name: userUpdated.name,
         avatar_url: userUpdated.avatar_url!,
-        userName: userUpdated.name,
+        userName: userUpdated.userName
       }
 
      
@@ -83,7 +83,7 @@ export  function PrismaAdapter(
         emailVerified: null,
         name: user.name,
         avatar_url: user.avatar_url!,
-        userName: user.name,
+        userName: user.userName,
         
       }
     },
@@ -114,7 +114,7 @@ export  function PrismaAdapter(
       emailVerified: null,
       name: user.name,
       avatar_url: user.avatar_url!,
-      userName: user.name,
+      userName: user.userName,
       
     }
       
@@ -139,7 +139,7 @@ export  function PrismaAdapter(
         emailVerified: null,
         name: userUpdated.name,
         avatar_url: userUpdated.avatar_url!,
-        userName: userUpdated.name,
+        userName: userUpdated.userName,
       }
     },
     async deleteUser(userId) {
@@ -211,7 +211,7 @@ export  function PrismaAdapter(
           emailVerified: null,
           name: user.name,
           avatar_url: user.avatar_url!,
-          userName: user.name,
+          userName: user.userName,
         }
       }
     },

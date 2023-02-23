@@ -16,8 +16,12 @@ export default  function ConenctCalendar()  {
 
 
     async function handleConnectCalendar(){
-        signIn('google')
+        await signIn('google')
     }
+    async function handleNavigateToUpdteProfile(){
+        router.push('/register/update-profile')
+    }
+    
     
    
     return (
@@ -58,7 +62,12 @@ export default  function ConenctCalendar()  {
                     )
                 }
                 
-                <Button disabled={!UserIsLogged}>Próximo passo <ArrowRight/> </Button>
+                <Button 
+                    disabled={!UserIsLogged}
+                    onClick={handleNavigateToUpdteProfile}
+                >  
+                     Próximo passo <ArrowRight/> 
+                </Button>
                 
             </ConnectBox>
 
