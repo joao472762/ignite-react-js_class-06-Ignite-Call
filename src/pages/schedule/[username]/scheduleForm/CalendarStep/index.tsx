@@ -13,65 +13,90 @@ import {
     TimePickerList, 
     CalendarStepContainer 
 } from "./styles";
+import dayjs from "dayjs";
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
+import { date } from "zod";
+import { useQuery } from "@tanstack/react-query";
 
-interface userIntervalsProps {
-    weekDay: number
-    timeEnd: number
-    timeStart: number
+interface availabilityProps {
+    possibleTimes: Array<number>,
+    avaliableTimes: Array<number>,
+}
+
+interface queryParams extends ParsedUrlQuery {
+    username: string
 }
 
 export function CalendarStep(){
-    const [userIntervals, setUserIntervals] = useState<userIntervalsProps[]>([])
 
-    const [selectedDate, setSelectedDate] = useState(new Date())
-    const [dateIsSelected, setDateIsSelected] = useState(false)
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+
+    const {query} = useRouter()
+     const { username } = query as queryParams
+    const selectedDateWithoutTime = selectedDate && dayjs(selectedDate).format('YYYY-MM-DD')
+
+    const { data: availability } = useQuery<availabilityProps>(['availability', selectedDateWithoutTime], async () => {
+
+        if (!selectedDate) {
+            return
+        }
+        
+        const response = await api.get(`/users/${username}/avaliable`, {
+            params: {
+                date: dayjs(selectedDate).format('YYYY-MM-DD')
+            }
+        })
+
+        return response.data
+        },
+        {
+            enabled: !!selectedDate
+        }
+    )
 
 
-    function updatedSelectedDate(date: Date) {
+   
+
+    
+    function onDateSelected(date: Date) {    
         setSelectedDate(date)
-        setDateIsSelected(true)
-    }
-
-    const weekday = Number(format(selectedDate, 'i'))
-    const intervalDay = userIntervals.find(interval => interval.weekDay === weekday)
-
-    const totalHoursAvaliable = intervalDay ? Number((intervalDay.timeEnd + 1 - intervalDay.timeStart)?.toFixed()) : 0
-
-    const intevalsHoursAvailable = Array.from(Array(totalHoursAvaliable).keys()).map((_, index) => {
-        return `${index + intervalDay!?.timeStart}:00`
-    })
-
-
-
-    async function fetchUserIntervals() {
-        const response = await api.get(`/intervals`)
-        setUserIntervals(response.data)
     }
 
 
-    useEffect(() => {
-        fetchUserIntervals()
-    }, [])
+    const weekDay = selectedDate && dayjs(selectedDate).format('dddd')
+    const describeDate = selectedDate && dayjs(selectedDate).format("DD [de] MMMM")
+
+
+    const hasDateSelected = !!selectedDate
 
 
     return (
-        <CalendarStepContainer isTimePickerOpen={dateIsSelected}>
-            <Calendar updatedSelectedDate={updatedSelectedDate}/>
+        <CalendarStepContainer isTimePickerOpen={hasDateSelected}>
+            <Calendar
+                selectedDate={selectedDate}
+                onDateSelected={onDateSelected}
+            />
             {
-                dateIsSelected && (
+                hasDateSelected && (
                     <DatePicker>
                         <TimePickerHeader>
-                            {formatWeek.format(selectedDate)}, <span>{formatMonthAndDay.format(selectedDate)}</span>
+                            {weekDay}, <span>{describeDate}</span>
                         </TimePickerHeader>
                         <TimePickerList>
-                            {
-                                intevalsHoursAvailable.map(hour => (
-                                    <TimePickerItem key={String(hour)}>
-                                        {hour}
+                            {   availability?.avaliableTimes && (
+                                availability?.avaliableTimes.map(hour => (
+                                    <TimePickerItem 
+                                        key={hour}
+                                        disabled={!availability.avaliableTimes.includes(hour)}
+                                    >
+                                        {String(hour).padStart(2, '0')}:00
                                     </TimePickerItem>
-
                                 ))
+
+                            )
                             }
+                            
 
                         </TimePickerList>
 

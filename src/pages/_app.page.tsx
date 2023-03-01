@@ -1,7 +1,10 @@
 import '@/styles/global'
 import type { AppProps } from 'next/app'
 import { globalStyles } from '@/styles/global'
+import '@/libs/dayjs'
 import { SessionProvider } from "next-auth/react"
+import { queryClient } from '@/libs/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 
 globalStyles()
 
@@ -11,8 +14,11 @@ export default function App({
  }: AppProps) {
   
   return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider session={session}>
+        <Component {...pageProps} />
+      </SessionProvider>
+
+    </QueryClientProvider>
   )
 }

@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -52,6 +52,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   timeIntervals UserTimeInterval[]
+  Scheduling    Scheduling[]
 
   @@map("users")
 }
@@ -65,4 +66,17 @@ model UserTimeInterval {
   user_id               String?
 
   @@map("user_time_intervals")
+}
+
+model Scheduling {
+  id          String   @id @default(uuid())
+  date        DateTime
+  name        String
+  observation String?
+  created_at  DateTime @default(now())
+
+  user    User   @relation(fields: [user_Id], references: [id])
+  user_Id String
+
+  @@map("schedulings")
 }

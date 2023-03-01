@@ -1,6 +1,6 @@
 import { styled, Box, Heading, Text } from "@ignite-ui/react"
 
-export const CalendarContent = styled(Box, {
+export const CalendarContainer  = styled(Box, {
    
     borderWidth: 0,
     borderRadius: '$px',
@@ -16,6 +16,7 @@ export const CalendarHeader = styled('div', {
 export const CalendarTitle = styled(Text, {
     color: '$white',
     fontWeight: '$medium',
+    textTransform: 'capitalize',
 
     'span':{
           color: '$gray200',
@@ -73,11 +74,12 @@ export const CalendarDays = styled('main', {
     gridTemplateColumns: 'repeat(auto-fit, minmax(63px, 1fr) )',
 })
 
-export const CalendarBody = styled('table',{
+export const CalendarContent = styled('table',{
     width: '100%',
    
     fontFamily: '$default',
     tableLayout: 'fixed',
+    marginTop: '$6',
     borderSpacing: '0.25rem',
 
     'thead th': {
