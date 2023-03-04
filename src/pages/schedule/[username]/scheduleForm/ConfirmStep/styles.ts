@@ -50,5 +50,6 @@ export const ConfirmStepFooter = styled('footer', {
     display: 'flex',
     rowGap: '$2',
     justifyContent: 'flex-end',
-    marginTop: '$6'
+    marginTop: '$6',
+    gap: '$2',
 })

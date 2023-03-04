@@ -2,6 +2,11 @@ import { Text,styled, Heading, Box } from "@ignite-ui/react";
 
 export const ScheduleContainer = styled('div',{
     maxWidth: 852,
+
+    display: 'flex',
+    flexDirection:'column',
+    alignItems: 'center',
+    gap: '$6',
     
     margin: '$20 auto $4',
     padding: '0 $4',

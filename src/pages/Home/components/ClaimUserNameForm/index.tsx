@@ -1,10 +1,10 @@
 import * as z from 'zod'
+import { useRouter } from 'next/router';
 import { useForm } from "react-hook-form";
 import { Button, Text, TextInput } from "@ignite-ui/react";
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { ClaimUserNameFormContainer, FormAnotation } from "./styles";
-import { useRouter } from 'next/router';
 
 const ClaimUserNameFormSchema = z.object({
     userName: z.string()

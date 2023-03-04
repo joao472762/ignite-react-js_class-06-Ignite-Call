@@ -1,10 +1,13 @@
-import '@/styles/global'
+import { DefaultSeo } from 'next-seo'
 import type { AppProps } from 'next/app'
-import { globalStyles } from '@/styles/global'
-import '@/libs/dayjs'
 import { SessionProvider } from "next-auth/react"
-import { queryClient } from '@/libs/react-query'
 import { QueryClientProvider } from '@tanstack/react-query'
+
+import '@/libs/dayjs'
+import '@/styles/global'
+import { globalStyles } from '@/styles/global'
+import { queryClient } from '@/libs/react-query'
+
 
 globalStyles()
 
@@ -16,6 +19,19 @@ export default function App({
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider session={session}>
+        <DefaultSeo
+          openGraph={{
+            type: 'website',
+            locale: 'en_IE',
+            url: 'https://www.url.ie/',
+            siteName: 'Ignite Call',
+          }}
+          twitter={{
+            handle: '@handle',
+            site: '@site',
+            cardType: 'summary_large_image',
+          }}
+        />
         <Component {...pageProps} />
       </SessionProvider>
 

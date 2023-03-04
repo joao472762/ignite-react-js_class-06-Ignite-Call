@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { useEffect } from "react";
+import { NextSeo } from "next-seo";
 import { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
@@ -59,48 +60,53 @@ export default function Register(){
 
 
     return (
-        <RegisterContainer>
-                <Header>
-                    <Heading as='strong'>Bem-vindo ao Ignite Call!</Heading>
-                    <Text>
-                        Precisamos de algumas informações para criar seu perfil! Ah, você pode editar essas informações depois.
-                    </Text>
-                    <MultiStep size={4} currentStep={1}/>
-                </Header>
+        <>
+            <NextSeo
+                title="Crie uma conta | Ignite Call"
+            />
+            <RegisterContainer>
+                    <Header>
+                        <Heading as='strong'>Bem-vindo ao Ignite Call!</Heading>
+                        <Text>
+                            Precisamos de algumas informações para criar seu perfil! Ah, você pode editar essas informações depois.
+                        </Text>
+                        <MultiStep size={4} currentStep={1}/>
+                    </Header>
 
-                <RegisterForm as={'form'} onSubmit={handleSubmit(handleRegisterNewUser)}>
+                    <RegisterForm as={'form'} onSubmit={handleSubmit(handleRegisterNewUser)}>
 
-                    <label>
-                        <Text>Nome de usuário</Text>
-                        <TextInput 
-                            prefix="cal.com/"
-                            {...register('userName')} 
-                        />
-                        {errors && errors.userName?.message && (
-                            <FormError size={'sm'}> {errors.userName.message}</FormError>
-                        )}
-                    </label>
-                 
+                        <label>
+                            <Text>Nome de usuário</Text>
+                            <TextInput 
+                                prefix="cal.com/"
+                                {...register('userName')} 
+                            />
+                            {errors && errors.userName?.message && (
+                                <FormError size={'sm'}> {errors.userName.message}</FormError>
+                            )}
+                        </label>
+                    
 
-                    <label>
-                        <Text>Nome Completo</Text>
-                        <TextInput 
-                            placeholder="seuNome"
-                            {...register('name')} 
-                        />
-                        {errors && errors.name?.message && (
-                            <FormError size={'sm'}> {errors.name.message}</FormError>
-                        )}
-                    </label>
+                        <label>
+                            <Text>Nome Completo</Text>
+                            <TextInput 
+                                placeholder="seuNome"
+                                {...register('name')} 
+                            />
+                            {errors && errors.name?.message && (
+                                <FormError size={'sm'}> {errors.name.message}</FormError>
+                            )}
+                        </label>
 
-                    <Button 
-                        type="submit"
-                        disabled={isSubmitting}
-                    >
-                        Próximo passo <ArrowRight/>
-                    </Button>
-                </RegisterForm>
-        
-        </RegisterContainer>
+                        <Button 
+                            type="submit"
+                            disabled={isSubmitting}
+                        >
+                            Próximo passo <ArrowRight/>
+                        </Button>
+                    </RegisterForm>
+            
+            </RegisterContainer>
+        </>
     )
 }

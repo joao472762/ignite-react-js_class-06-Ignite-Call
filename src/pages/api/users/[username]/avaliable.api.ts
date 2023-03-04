@@ -59,8 +59,8 @@ export default async function handler (
     }
 
     const {time_end_in_minutes,time_start_in_minutes} = userAvaliability
-    const startHour = time_start_in_minutes / 60 // 4
-    const endHour = time_end_in_minutes / 60 // 7
+    const startHour = time_start_in_minutes / 60 
+    const endHour = time_end_in_minutes / 60 
 
     const diferenceBetweenHours = endHour - startHour
 

@@ -12,6 +12,7 @@ import { Header } from '../components'
 import { buildNextAuthOptions } from '@/pages/api/auth/[...nextauth].api'
 import { FormAnotation, ProfileBox, UpadeteProfileContainer } from './styles'
 import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
 
 const updateProfileSchema = z.object({
     bio: z.string().min(1),
@@ -34,40 +35,46 @@ export default function UpdateProfile(){
     }
     
     return (
-        <UpadeteProfileContainer>
-            <Header>
-                <Heading as='strong'>Defina sua disponibilidade</Heading>
-                <Text>Por último, uma breve descrição e uma foto de perfil.</Text>
-                <MultiStep size={4} currentStep={4} />
-            </Header>
-            <ProfileBox  
-                as='form'
-                onSubmit={handleSubmit(handleUpdateBioProfile)}
-            >
-                <label>
-                    <Text size={'sm'}>Foto de perfil</Text>
-                    <Avatar  src={data?.user.avatar_url} alt={data?.user.name}/>
-                </label>
-                
-                <label>
-                    <Text size={'sm' }> Sobre você</Text>
-                    <TextArea 
-                        {...register('bio')}
-                        placeholder='escreva algo sobre'
-                    />
-                    <FormAnotation>Fale um pouco sobre você. Isto será exibido em sua página pessoal.</FormAnotation>
-                </label>
-                
-                <Button
-                    type='submit'
-                    disabled={isSubmitting}
+        <>
+            <NextSeo
+                title="Atualize o seu perfil | Ignite Call"
+                noindex
+            />
+            <UpadeteProfileContainer>
+                <Header>
+                    <Heading as='strong'>Defina sua disponibilidade</Heading>
+                    <Text>Por último, uma breve descrição e uma foto de perfil.</Text>
+                    <MultiStep size={4} currentStep={4} />
+                </Header>
+                <ProfileBox  
+                    as='form'
+                    onSubmit={handleSubmit(handleUpdateBioProfile)}
                 >
-                    Próximo passo <ArrowRight />
-                </Button>
-                
+                    <label>
+                        <Text size={'sm'}>Foto de perfil</Text>
+                        <Avatar  src={data?.user.avatar_url} alt={data?.user.name}/>
+                    </label>
+                    
+                    <label>
+                        <Text size={'sm' }> Sobre você</Text>
+                        <TextArea 
+                            {...register('bio')}
+                            placeholder='escreva algo sobre'
+                        />
+                        <FormAnotation>Fale um pouco sobre você. Isto será exibido em sua página pessoal.</FormAnotation>
+                    </label>
+                    
+                    <Button
+                        type='submit'
+                        disabled={isSubmitting}
+                    >
+                        Próximo passo <ArrowRight />
+                    </Button>
+                    
 
-            </ProfileBox>
-        </UpadeteProfileContainer>
+                </ProfileBox>
+            </UpadeteProfileContainer>
+        </>
     )
 }
 

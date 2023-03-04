@@ -1,3 +1,4 @@
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ArrowRight, Check } from "phosphor-react";
 import { signIn, useSession } from "next-auth/react";
@@ -19,59 +20,65 @@ export default  function ConenctCalendar()  {
         await signIn('google')
     }
     async function handleNavigateToUpdteProfile(){
-        router.push('/register/update-profile')
+        router.push('/register/time-interval')
     }
     
     
    
     return (
-        <ConenctCalendarContainer>
-            <Header>
-                <Heading>Conecte sua agenda!</Heading>
-                <Text>
-                    Conecte o seu calendário para verificar automaticamente as horas 
-                    ocupadas e os novos eventos à medida em que são agendados.
-                </Text>
-                <MultiStep size={4} currentStep={2}/>
+        <>
+            <NextSeo
+                title="Conecte sua Agenda do Google| Ignite Call"
+                noindex
+            />
+            <ConenctCalendarContainer>
+                <Header>
+                    <Heading>Conecte sua agenda!</Heading>
+                    <Text>
+                        Conecte o seu calendário para verificar automaticamente as horas 
+                        ocupadas e os novos eventos à medida em que são agendados.
+                    </Text>
+                    <MultiStep size={4} currentStep={2}/>
 
-            </Header>
+                </Header>
 
-            <ConnectBox as='main'>
-                <ConnectArea>
-                    <Text>Google Calendar</Text>
+                <ConnectBox as='main'>
+                    <ConnectArea>
+                        <Text>Google Calendar</Text>
+                        {
+                            UserIsLogged ? (
+                                <Button size={"sm"} disabled variant={"secondary"} >Conectado <Check/> </Button>
+                            ) :(
+                            <Button 
+                                variant={"secondary"}
+                                onClick={handleConnectCalendar}
+                            >
+                                Conectar <ArrowRight/>
+                            </Button>
+                            )
+                        }
+                    </ConnectArea>
+
                     {
-                        UserIsLogged ? (
-                            <Button size={"sm"} disabled variant={"secondary"} >Conectado <Check/> </Button>
-                        ) :(
-                        <Button 
-                            variant={"secondary"}
-                            onClick={handleConnectCalendar}
-                        >
-                            Conectar <ArrowRight/>
-                        </Button>
+                        hasError && (
+                            <AuthError> 
+                                Falha ao conectar ao Google, veirifique se 
+                                você habilitou as permissões de acesso ao Google Calendar
+                            </AuthError>
                         )
                     }
-                </ConnectArea>
-
-                {
-                    hasError && (
-                        <AuthError> 
-                            Falha ao conectar ao Google, veirifique se 
-                            você habilitou as permissões de acesso ao Google Calendar
-                        </AuthError>
-                    )
-                }
-                
-                <Button 
-                    disabled={!UserIsLogged}
-                    onClick={handleNavigateToUpdteProfile}
-                >  
-                     Próximo passo <ArrowRight/> 
-                </Button>
-                
-            </ConnectBox>
+                    
+                    <Button 
+                        disabled={!UserIsLogged}
+                        onClick={handleNavigateToUpdteProfile}
+                    >  
+                        Próximo passo <ArrowRight/> 
+                    </Button>
+                    
+                </ConnectBox>
 
 
-        </ConenctCalendarContainer>
+            </ConenctCalendarContainer>
+        </>
     )
 }

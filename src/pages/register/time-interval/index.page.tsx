@@ -1,15 +1,23 @@
 import { z } from "zod";
+import { NextSeo } from "next-seo";
 import { ArrowRight } from "phosphor-react";
-import { getWeekDays } from "@/utils/getWeekDays";
+import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { covertTimeStringToMinutes } from "@/utils/covert-time-string-to-minutes";
 import { Button, Checkbox, Heading, MultiStep,Text, TextInput } from "@ignite-ui/react";
 
-import { Header } from "../styles";
-import { TimeIntervalContainer, IntervalItem, IntervalBox, IntervalDay, IntervalInputs, FormError} from "./styles";
 import { api } from "@/libs/axios";
-import { useRouter } from "next/router";
+import { Header } from "../styles";
+import { getWeekDays } from "@/utils/getWeekDays";
+import { covertTimeStringToMinutes } from "@/utils/covert-time-string-to-minutes";
+import { 
+    TimeIntervalContainer,
+    IntervalItem, 
+    IntervalBox, 
+    IntervalDay, 
+    IntervalInputs, 
+    FormError
+} from "./styles";
 
 const timeIntervalFormSchema = z.object({
     intervals: z.array(z.object({
@@ -94,72 +102,79 @@ export default function TimeInterval(){
     }
 
     return (
-        <TimeIntervalContainer>
+        <>
+            <NextSeo
+                title="Selecione sua disponibilidade | Ignite Call"
+                noindex
+            />
+            <TimeIntervalContainer>
 
-            <Header>
-                <Heading as='strong'>Quase lá</Heading>
-                <Text>Defina o intervalo de horários que você está disponível em cada dia da semana.</Text>
-                <MultiStep size={4} currentStep={1} />
-            </Header>
+                <Header>
+                    <Heading as='strong'>Quase lá</Heading>
+                    <Text>Defina o intervalo de horários que você está disponível em cada dia da semana.</Text>
+                    <MultiStep size={4} currentStep={1} />
+                </Header>
 
-            <IntervalBox 
-                as='form'
-                onSubmit={handleSubmit(handleSetTimeIterval)}
-            >
-                <section>
-                    {
-                        fields.map((interval,index) => (
-                            <IntervalItem key={interval.id}>
-                                <IntervalDay>
-                                    <Controller
-                                        name={`intervals.${index}.enabled`} 
-                                        control={control}
-                                        render={({field}) =>  (
-                                            <Checkbox
-                                                checked={field.value}
-                                                onCheckedChange={checked => field.onChange(checked === true)}
-                                            />
-
-                                        )}
-                                        
-           
-                                    />
-
-                                    <Text>{weekDays[interval.weekday]}</Text>
-                                </IntervalDay>
-                                <IntervalInputs>
-                                    <TextInput
-                                        type='time'
-                                        step={60}
-                                        disabled={intervals[index].enabled === false}
-                                        {...register(`intervals.${index}.startTime`)}
-                                    />
-                                    <TextInput
-                                        type='time'
-                                        step={60}
-                                        disabled={intervals[index].enabled === false}
-                                        {...register(`intervals.${index}.endTime`)}
-                                    />
-                                </IntervalInputs>
-                            </IntervalItem>
-                        ))
-                    }
-               
-                </section>
-                {errors.intervals && errors.intervals.message &&
-                    <FormError>
-                        {errors.intervals.message}
-                    </FormError>
-                
-                }
-                <Button 
-                    disabled={isSubmitting}
-                    type="submit"
+                <IntervalBox 
+                    as='form'
+                    onSubmit={handleSubmit(handleSetTimeIterval)}
                 >
-                    Próximo passo <ArrowRight/> 
+                    <section>
+                        {
+                            fields.map((interval,index) => (
+                                <IntervalItem key={interval.id}>
+                                    <IntervalDay>
+                                        <Controller
+                                            name={`intervals.${index}.enabled`} 
+                                            control={control}
+                                            render={({field}) =>  (
+                                                <Checkbox
+                                                    checked={field.value}
+                                                    onCheckedChange={checked => field.onChange(checked === true)}
+                                                />
 
-                </Button>
-            </IntervalBox>
-        </TimeIntervalContainer>
+                                            )}
+                                            
+            
+                                        />
+
+                                        <Text>{weekDays[interval.weekday]}</Text>
+                                    </IntervalDay>
+                                    <IntervalInputs>
+                                        <TextInput
+                                            type='time'
+                                            step={60}
+                                            disabled={intervals[index].enabled === false}
+                                            {...register(`intervals.${index}.startTime`)}
+                                        />
+                                        <TextInput
+                                            type='time'
+                                            step={60}
+                                            disabled={intervals[index].enabled === false}
+                                            {...register(`intervals.${index}.endTime`)}
+                                        />
+                                    </IntervalInputs>
+                                </IntervalItem>
+                            ))
+                        }
+                
+                    </section>
+                    {errors.intervals && errors.intervals.message &&
+                        <FormError>
+                            {errors.intervals.message}
+                        </FormError>
+                    
+                    }
+                    <Button 
+                        disabled={isSubmitting}
+                        type="submit"
+                    >
+                        Próximo passo <ArrowRight/> 
+
+                    </Button>
+                </IntervalBox>
+            </TimeIntervalContainer>
+        
+        </>
     )
 }

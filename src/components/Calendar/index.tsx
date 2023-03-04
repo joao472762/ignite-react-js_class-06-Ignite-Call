@@ -16,7 +16,6 @@ import { ParsedUrlQuery } from "querystring";
 
 interface CalendarProps {
     onDateSelected: (date: Date) => void,
-    selectedDate: Date | null
 }
 
 interface CalendarWeek {
@@ -38,12 +37,12 @@ interface BlockedDates  {
 
 type CalendarWeeks = CalendarWeek[]
 
-export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
+export function Calendar({ onDateSelected }: CalendarProps) {
     
     const { query } = useRouter()
     const { username } = query as queryParams
     
-    const [currentDate, setCurrnetDate] = useState(() => {
+    const [currentDate, setCurrent] = useState(() => {
         return dayjs().set('date', 1)
     })
 
@@ -55,7 +54,7 @@ export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
         const response = await api.get(`/users/${username}/blocked-dates`,{
             params: {
                 year: currentYear,
-                month: currentMonth,
+                month: currentMonth + 1,
             }
         })
 
@@ -134,13 +133,13 @@ export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
 
     function handleIncreaseMonth() {
         const currentDateIncreased = currentDate.add(1, 'month')
-        setCurrnetDate(currentDateIncreased)
+        setCurrent(currentDateIncreased)
     }
 
 
     function handleDecreaseMouth() {
         const currentDateDecreased = currentDate.subtract(1, 'month')
-        setCurrnetDate(currentDateDecreased)
+        setCurrent(currentDateDecreased)
     }
 
     return (

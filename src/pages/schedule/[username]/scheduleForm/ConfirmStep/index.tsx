@@ -11,37 +11,70 @@ import {
     ConfirmStepHeader,
     ConfirmStepContainer,
 } from './styles'
+import dayjs from "dayjs"
+import { api } from "@/libs/axios"
+import { useRouter } from "next/router"
+import { ParsedUrlQuery } from "querystring"
+
+
+interface ConfirmStepProps {
+    schedulingDate: Date | null,
+    clearSelectedDateTime: () => void,
+}
+
+interface queryParams extends ParsedUrlQuery {
+    username: string
+}
 
 const confirmFormSchema = z.object({
     name: z.string().min(3,{message: ') nome precisa ter pelo menos 3 caracteres'}),
     email: z.string().email({message: 'Digite um email válido'}),
-    observation: z.string()
+    observation: z.string().nullable()
 })
 
 type confirmFormData = z.infer<typeof confirmFormSchema>
 
 
-export function ConfirmStep(){
+export function ConfirmStep({ schedulingDate, clearSelectedDateTime }: ConfirmStepProps){
     const { handleSubmit, register, formState} = useForm<confirmFormData>({
         resolver: zodResolver(confirmFormSchema)
     })
     const {errors, isSubmitting} = formState
 
-    function handleConfirmSchadule(formData: confirmFormData) {
-        console.log(formData)
+    const {query} = useRouter()
+    const {username} = query as queryParams
+
+    async function handleConfirmSchadule(formData: confirmFormData) {
+        await api.post(`/users/${username}/scheduling`,{
+            date: schedulingDate,
+            name: formData.name,
+            observation: formData.observation,
+            email: formData.email,
+        })
+
+        clearSelectedDateTime()
     }
+    
+    function handleClearSelectedDateTime() {
+        clearSelectedDateTime()
+    }
+    
+    const schedulingDateReferrence = dayjs(schedulingDate)
+    const describeDate = schedulingDateReferrence.format('DD [de] dddd [de] YYYY')
+    const describeTime   = schedulingDateReferrence.format('HH:mm[0]')
+
     return (
         <ConfirmStepContainer as='form'  onSubmit={handleSubmit(handleConfirmSchadule)}>
             <ConfirmStepHeader>
                 
                     <Text>
                         <CalendarBlank/>
-                        22 de Setembro de 2022
+                         {describeDate}
                     </Text>
                 
                     <Text>
                         <Clock/>
-                        18:00h
+                    {describeTime   }
                         </Text>
                 
             </ConfirmStepHeader>
@@ -81,7 +114,13 @@ export function ConfirmStep(){
 
             </FormFields>
             <ConfirmStepFooter >
-                <Button type="button" variant={'tertiary'}>Cancelar</Button>
+                <Button 
+                    onClick={handleClearSelectedDateTime}
+                    type="button" 
+                    variant={'tertiary'}
+                >
+                    Cancelar
+                </Button>
                 <Button type="submit" disabled={isSubmitting} >Confirmar</Button>
             </ConfirmStepFooter>
         </ConfirmStepContainer>

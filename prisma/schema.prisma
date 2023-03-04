@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Account {
@@ -16,17 +17,18 @@ model Account {
   type                String
   provider            String
   provider_account_id String
-  refresh_token       String?
-  access_token        String?
+  refresh_token       String? @db.Text
+  access_token        String? @db.Text
   expires_at          Int?
   token_type          String?
   scope               String?
-  id_token            String?
+  id_token            String? @db.Text
   session_state       String?
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([provider, provider_account_id])
+  @@index([user_id])
   @@map("acounts")
 }
 
@@ -37,6 +39,7 @@ model Session {
   expires       DateTime
   user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
+  @@index([user_id])
   @@map("sessions")
 }
 
@@ -44,7 +47,7 @@ model User {
   id         String   @id @default(uuid())
   userName   String   @unique
   name       String
-  bio        String?
+  bio        String?  @db.Text
   avatar_url String?  @unique
   created_at DateTime @default(now())
   email      String?  @unique
@@ -65,6 +68,7 @@ model UserTimeInterval {
   User                  User?   @relation(fields: [user_id], references: [id])
   user_id               String?
 
+  @@index([user_id])
   @@map("user_time_intervals")
 }
 
@@ -73,10 +77,12 @@ model Scheduling {
   date        DateTime
   name        String
   observation String?
+  email       String
   created_at  DateTime @default(now())
 
   user    User   @relation(fields: [user_Id], references: [id])
   user_Id String
 
+  @@index([user_Id])
   @@map("schedulings")
 }
